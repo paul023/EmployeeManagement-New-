@@ -1,0 +1,61 @@
+﻿@model IEnumerable<EmployeeManagement.Models.LeaveApp>
+
+@{
+    ViewData["Title"] = "Rejected Leave Applications";
+}
+
+<!-- Create New Employee Button -->
+
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title" Rejected Leave Application List</h3>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Employee)</th>
+                        <th>@Html.DisplayNameFor(model => model.NoOfDays)</th>
+                        <th>@Html.DisplayNameFor(model => model.StartDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.Duration)</th>
+                        <th>@Html.DisplayNameFor(model => model.LeaveType)</th>
+                        <th>@Html.DisplayNameFor(model => model.Attachment)</th>
+                        <th>@Html.DisplayNameFor(model => model.Status)</th>
+                        <th>@Html.DisplayNameFor(model => model.Description)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Employee.FullName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.NoOfDays)</td>
+                            <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Duration.Description)</td>
+                            <td>@Html.DisplayFor(modelItem => item.LeaveType.name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Attachment)</td>
+                            <td style ="background-color:red">@Html.DisplayFor(modelItem => item.Status.Description)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td>
+                                <div class="btn-group">
+                                  
+                                    <button class="btn btn-sm btn-info w-100 mb-1" onclick="window.location.href='@Url.Action("Details", new { id = item.Id })'">
+                                        <i class="fas fa-info-circle"></i> View
+                                    </button>
+
+                                </div>
+                            </td>
+
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

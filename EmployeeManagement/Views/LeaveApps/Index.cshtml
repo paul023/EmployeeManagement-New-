@@ -1,0 +1,81 @@
+﻿@model IEnumerable<EmployeeManagement.Models.LeaveApp>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!-- Create New Employee Button -->
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fa fa-plus"></i> Create New
+    </a>
+</p>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title"Leave Application List</h3>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Employee)</th>
+                        <th>@Html.DisplayNameFor(model => model.NoOfDays)</th>
+                        <th>@Html.DisplayNameFor(model => model.StartDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.EndDate)</th>
+                        <th>@Html.DisplayNameFor(model => model.Duration)</th>
+                        <th>@Html.DisplayNameFor(model => model.LeaveType)</th>
+                        <th>@Html.DisplayNameFor(model => model.Attachment)</th>
+                        <th>@Html.DisplayNameFor(model => model.Status)</th>
+                        <th>@Html.DisplayNameFor(model => model.Description)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Employee.FullName)</td>
+                            <td>@Html.DisplayFor(modelItem => item.NoOfDays)</td>
+                            <td>@Html.DisplayFor(modelItem => item.StartDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.EndDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Duration.Description)</td>
+                            <td>@Html.DisplayFor(modelItem => item.LeaveType.name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Attachment)</td>
+                            <td style ="background-color:green">@Html.DisplayFor(modelItem => item.Status.Description)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Actions
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="btn btn-sm btn-warning w-100 mb-1" onclick="window.location.href='@Url.Action("Edit", new { id = item.Id })'">
+                                            <i class="fas fa-edit"></i> Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-info w-100 mb-1" onclick="window.location.href='@Url.Action("Details", new { id = item.Id })'">
+                                            <i class="fas fa-info-circle"></i> View
+                                        </button>
+                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" class="d-inline delete-form">
+                                            <button type="submit" class="btn btn-sm btn-danger w-100 mb-1" onclick="return confirm('Are you sure you want to delete this record?');">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
+                                        </form>
+                                        <button class="btn btn-sm btn-primary w-100 mb-1" onclick="window.location.href='@Url.Action("Approve", new { id = item.Id })'">
+                                            <i class="fas fa-info-circle"></i> Approved
+                                        </button>
+
+                                        <button class="btn btn-sm btn-danger w-100 mb-1" onclick="window.location.href='@Url.Action("Reject", new { id = item.Id })'">
+                                            <i class="fas fa-info-circle"></i> Rejected
+                                        </button>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

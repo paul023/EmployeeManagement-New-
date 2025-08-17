@@ -1,0 +1,160 @@
+﻿@model EmployeeManagement.Models.LeaveApp
+
+@{
+    ViewData["Title"] = "Edit Leave Application";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header bg-warning text-white">
+            <h4><i class="bi bi-pencil-square"></i> Edit Leave Application</h4>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <input type="hidden" asp-for="Id" /> <!-- Keep track of LeaveApp ID -->
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="row">
+                    <!-- Employee Selection -->
+                    <div class="col-md-6">
+                        <label asp-for="EmployeeId" class="form-label fw-bold"></label>
+                        <select asp-for="EmployeeId" class="form-select" asp-items="ViewBag.EmployeeId">
+                            <option value="">-- Select Employee --</option>
+                        </select>
+                    </div>
+
+                    <!-- Leave Type -->
+                    <div class="col-md-6">
+                        <label asp-for="LeaveTypeId" class="form-label fw-bold"></label>
+                        <select asp-for="LeaveTypeId" class="form-select" asp-items="ViewBag.LeaveTypeId">
+                            <option value="">-- Select Leave Type --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <!-- Start Date -->
+                    <div class="col-md-6">
+                        <label asp-for="StartDate" class="form-label fw-bold"></label>
+                        <input asp-for="StartDate" class="form-control" type="date" id="StartDate" />
+                        <span asp-validation-for="StartDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="col-md-6">
+                        <label asp-for="EndDate" class="form-label fw-bold"></label>
+                        <input asp-for="EndDate" class="form-control" type="date" id="EndDate" />
+                        <span asp-validation-for="EndDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <!-- No. of Days (Auto-calculated) -->
+                    <div class="col-md-6">
+                        <label asp-for="NoOfDays" class="form-label fw-bold"></label>
+                        <input asp-for="NoOfDays" class="form-control" id="NoOfDays" readonly />
+                    </div>
+
+                    <!-- Duration -->
+                    <div class="col-md-6">
+                        <label asp-for="DurationId" class="form-label fw-bold"></label>
+                        <select asp-for="DurationId" class="form-select" asp-items="ViewBag.DurationId">
+                            <option value="">-- Select Duration --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <!-- Leave Status -->
+                 @*    <div class="col-md-6">
+                        <label asp-for="StatusId" class="form-label fw-bold"></label>
+                        <select asp-for="StatusId" class="form-select" asp-items="ViewBag.StatusId">
+                            <option value="">-- Select Status --</option>
+                        </select>
+                    </div> *@
+
+                    <!-- Approved By -->
+                   @*  <div class="col-md-6">
+                        <label asp-for="ApprovedId" class="form-label fw-bold"></label>
+                        <select asp-for="ApprovedId" class="form-select" asp-items="ViewBag.ApprovedUsers">
+                            <option value="">-- Select Approver --</option>
+                        </select>
+                    </div> *@
+                </div>
+
+                <div class="row mt-3">
+                    <!-- Description -->
+                    <div class="col-md-12">
+                        <label asp-for="Description" class="form-label fw-bold"></label>
+                        <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <!-- File Upload with Preview -->
+                    <div class="col-md-12">
+                        <label asp-for="Attachment" class="form-label fw-bold"></label>
+                        <input asp-for="Attachment" type="file" class="form-control" id="Attachment" onchange="previewFile()" />
+                        <span asp-validation-for="Attachment" class="text-danger"></span>
+                        <div class="mt-2">
+                            <img id="filePreview" src="@Model.Attachment" alt="No file selected" class="img-thumbnail @(string.IsNullOrEmpty(Model.Attachment) ? "d-none" : "")" style="max-width: 200px;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-warning px-4">
+                        <i class="bi bi-save"></i> Update Leave
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary px-4">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        // Auto-calculate NoOfDays
+        document.getElementById("StartDate").addEventListener("change", calculateDays);
+        document.getElementById("EndDate").addEventListener("change", calculateDays);
+
+        function calculateDays() {
+            let start = new Date(document.getElementById("StartDate").value);
+            let end = new Date(document.getElementById("EndDate").value);
+            if (start && end && start <= end) {
+                let difference = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                document.getElementById("NoOfDays").value = difference;
+            } else {
+                document.getElementById("NoOfDays").value = "";
+            }
+        }
+
+        // File upload preview
+        function previewFile() {
+            var preview = document.getElementById("filePreview");
+            var file = document.getElementById("Attachment").files[0];
+            var reader = new FileReader();
+
+            reader.onloadend = function () {
+                preview.src = reader.result;
+                preview.classList.remove("d-none");
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "#";
+                preview.classList.add("d-none");
+            }
+        }
+    </script>
+}

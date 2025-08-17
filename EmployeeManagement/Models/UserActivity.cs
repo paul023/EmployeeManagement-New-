@@ -7,5 +7,14 @@
 
         public string? ModifiedById { get; set; }
         public DateTime ModifiedOn { get; set; }
+    } 
+
+    public class ApprovalActivity : UserActivity
+    {
+        public string? ApprovedId { get; set; }
+        public DateTime ApprovedOn { get; set; }
+
+      
     }
+
 }

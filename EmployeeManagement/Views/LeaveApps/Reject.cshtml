@@ -1,0 +1,93 @@
+﻿@model EmployeeManagement.Models.LeaveApp
+
+@{
+    ViewData["Title"] = "Reject Leave Details";
+}
+
+<h1>Details</h1>
+<form asp-action="Reject" method="post">
+<div class="card">
+
+        <h3 class="card-title">Reject Leave Application Details</h3>
+    <div class="card-body">
+
+       
+        <table class="table table-bordered table-striped">
+            <tbody>
+                <tr>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.Employee)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.Employee.FullName)</td>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.NoOfDays)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.NoOfDays)</td>
+                </tr>
+                <tr>
+                  
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.StartDate)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.StartDate)</td>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.EndDate)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.EndDate)</td>
+                </tr>
+                   
+                <tr>
+                   
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.Duration)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.Duration.Description)</td>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.LeaveType)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.LeaveType.name)</td>
+                </tr>
+                   
+             
+                <tr>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.Status)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.Status.Id)</td>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.Attachment)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.Attachment)</td>
+                </tr>
+             
+               @*  <tr>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.Description)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.Description)</td>
+                
+                </tr> *@
+             
+                <tr>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.ApprovedId)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.ApprovedId)</td>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.ApprovedOn)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.ApprovedOn)</td>
+                </tr>
+             
+                <tr>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.CreateById)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.CreateById)</td>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.CreatedOn)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.CreatedOn)</td>
+                </tr>
+               
+               
+               @*  <tr>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.ModifiedById)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.ModifiedById)</td>
+                    <th class="col-sm-3">@Html.DisplayNameFor(model => model.ModifiedOn)</th>
+                    <td class="col-sm-3">@Html.DisplayFor(model => model.ModifiedOn)</td>
+                </tr> *@
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    
+
+        <div class="col-md-12">
+            <label asp-for="ApprovalNotes" class="form-label fw-bold"></label>
+            <textarea class="form-control mb-1" asp-for="ApprovalNotes"></textarea>
+            <div class="clearfix">
+           
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                <input type="submit" value="Reject" class="btn btn-danger" />
+            
+            </div>
+        </div>
+    </form>
+</div>
