@@ -1,0 +1,46 @@
+﻿@model EmployeeManagement.Models.Role
+
+@{
+    ViewData["Title"] = "Update Role";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Create New Role</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <input asp-for="Id" type="hidden" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <!-- Role Name -->
+                        <div class="mb-3">
+                            <label asp-for="RoleName" class="form-label fw-bold"></label>
+                            <input asp-for="RoleName" class="form-control" placeholder="Enter role name" />
+                            <span asp-validation-for="RoleName" class="text-danger small"></span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="bg-light text-start mt-3">
+                            <a asp-action="Index" class="btn btn-sm btn-secondary me-2">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-sm btn-success">
+                                <i class="bi bi-save"></i> Save Role
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

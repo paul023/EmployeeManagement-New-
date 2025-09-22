@@ -1,54 +1,53 @@
 ﻿@model EmployeeManagement.Models.LeaveType
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Leave Type Details";
 }
 
-<h1>Details</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Leave Type Details</h5>
+                    <span class="badge bg-light text-dark">ID: @Model.Id</span>
+                </div>
+                <div class="card-body">
+                    <dl class="row mb-3">
+                        <dt class="col-sm-3 text-muted">Code</dt>
+                        <dd class="col-sm-9 fw-bold">@Model.code</dd>
+                    </dl>
+                    <dl class="row mb-3">
+                        <dt class="col-sm-3 text-muted">Name</dt>
+                        <dd class="col-sm-9 fw-bold">@Model.name</dd>
+                    </dl>
+                    <dl class="row mb-3">
+                        <dt class="col-sm-3 text-muted">Created By</dt>
+                        <dd class="col-sm-9 fw-bold">@Model.CreateById</dd>
+                    </dl>
+                    <dl class="row mb-3">
+                        <dt class="col-sm-3 text-muted">Created On</dt>
+                        <dd class="col-sm-9 fw-bold">@Model.CreatedOn.ToString("yyyy-MM-dd HH:mm")</dd>
+                    </dl>
+                    <dl class="row mb-3">
+                        <dt class="col-sm-3 text-muted">Modified By</dt>
+                        <dd class="col-sm-9 fw-bold">@Model.ModifiedById</dd>
+                    </dl>
+                    <dl class="row mb-0">
+                        <dt class="col-sm-3 text-muted">Modified On</dt>
+                        <dd class="col-sm-9 fw-bold">@Model.ModifiedOn?.ToString("yyyy-MM-dd HH:mm")</dd>
+                    </dl>
+                </div>
 
-<div>
-    <h4>LeaveType</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.code)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.code)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreateById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreateById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CreatedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreatedOn)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedById)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedById)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ModifiedOn)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ModifiedOn)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+                <div class="card-footer bg-light text-start">
+                    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-sm btn-warning me-2">
+                        <i class="bi bi-pencil-square"></i> Edit
+                    </a>
+                    <a asp-action="Index" class="btn btn-sm btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Back to List
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

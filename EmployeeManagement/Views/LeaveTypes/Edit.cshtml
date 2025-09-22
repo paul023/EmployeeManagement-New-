@@ -1,59 +1,51 @@
 ﻿@model EmployeeManagement.Models.LeaveType
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Update Leave Type";
 }
 
-<h1>Edit</h1>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Update Leave Type</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <input type="hidden" asp-for="Id" />
 
-<h4>LeaveType</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="code" class="control-label"></label>
-                <input asp-for="code" class="form-control" />
-                <span asp-validation-for="code" class="text-danger"></span>
+                        <div class="mb-3">
+                            <label asp-for="code" class="form-label"></label>
+                            <input asp-for="code" class="form-control" />
+                            <span asp-validation-for="code" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="name" class="form-label"></label>
+                            <input asp-for="name" class="form-control" />
+                            <span asp-validation-for="name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="bg-light text-start mt-3">
+                            <a asp-action="Index" class="btn btn-sm btn-secondary me-2">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-sm btn-success">
+                                <i class="bi bi-save"></i> Save Leave Type
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="name" class="control-label"></label>
-                <input asp-for="name" class="form-control" />
-                <span asp-validation-for="name" class="text-danger"></span>
-            </div>
-          @*   <div class="form-group">
-                <label asp-for="CreateById" class="control-label"></label>
-                <input asp-for="CreateById" class="form-control" />
-                <span asp-validation-for="CreateById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreatedOn" class="control-label"></label>
-                <input asp-for="CreatedOn" class="form-control" />
-                <span asp-validation-for="CreatedOn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedById" class="control-label"></label>
-                <input asp-for="ModifiedById" class="form-control" />
-                <span asp-validation-for="ModifiedById" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ModifiedOn" class="control-label"></label>
-                <input asp-for="ModifiedOn" class="form-control" />
-                <span asp-validation-for="ModifiedOn" class="text-danger"></span>
-            </div> *@
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

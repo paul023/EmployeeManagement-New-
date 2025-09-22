@@ -117,25 +117,6 @@ namespace EmployeeManagement.Controllers
             return View(employee);
         }
 
-        //// GET: Employees/Delete/5
-        //public async Task<IActionResult> Delete(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var employee = await _context.Employees
-        //        .FirstOrDefaultAsync(m => m.Id == id);
-        //    if (employee == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return View(employee);
-        //}
-
-        // POST: Employees/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

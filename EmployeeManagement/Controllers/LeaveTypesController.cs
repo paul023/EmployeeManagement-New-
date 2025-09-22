@@ -83,9 +83,7 @@ namespace EmployeeManagement.Controllers
             return View(leaveType);
         }
 
-        // POST: LeaveTypes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, LeaveType leaveType)
@@ -99,6 +97,10 @@ namespace EmployeeManagement.Controllers
             {
                 try
                 {
+                    // Update Modified info
+                    leaveType.ModifiedById = "Paul"; // later replace with logged-in user
+                    leaveType.ModifiedOn = DateTime.Now;
+
                     _context.Update(leaveType);
                     await _context.SaveChangesAsync();
                 }
