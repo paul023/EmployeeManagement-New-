@@ -48,25 +48,30 @@ namespace EmployeeManagement.Controllers
         // GET: Cities/Create
         public IActionResult Create()
         {
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id");
+            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name");
             return View();
         }
 
-        // POST: Cities/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Code,Name,CountryId,CreateById,CreatedOn,ModifiedById,ModifiedOn")] City city)
+        public async Task<IActionResult> Create(City city)
         {
-            if (ModelState.IsValid)
+
+            if (await _context.Cities.AnyAsync(c => c.Name == city.Name))
             {
+                ModelState.AddModelError("Name", "A city with this name already exists.");
+                ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", city.CountryId);
+                return View(city);
+            }
+            city.CreateById = "Paul";
+                city.CreatedOn = DateTime.Now;
                 _context.Add(city);
                 await _context.SaveChangesAsync();
+
+                // Set TempData message
+                TempData["SuccessMessage"] = "City created successfully!";
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
-            return View(city);
+            
         }
 
         // GET: Cities/Edit/5
@@ -82,29 +87,35 @@ namespace EmployeeManagement.Controllers
             {
                 return NotFound();
             }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
+            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", city.CountryId);
             return View(city);
         }
 
-        // POST: Cities/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Code,Name,CountryId,CreateById,CreatedOn,ModifiedById,ModifiedOn")] City city)
+        public async Task<IActionResult> Edit(int id,City city)
         {
             if (id != city.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            if (await _context.Cities.AnyAsync(c => c.Name == city.Name && c.Id != city.Id))
             {
-                try
+                ModelState.AddModelError("Name", "A city with this name already exists.");
+                ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", city.CountryId);
+                return View(city);
+            }
+
+            try
                 {
+                    city.ModifiedById = "Paul";
+                    city.ModifiedOn = DateTime.Now;
                     _context.Update(city);
                     await _context.SaveChangesAsync();
-                }
+                TempData["WarningMessage"] = "City updated successfully!";
+                return RedirectToAction(nameof(Index));
+            }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!CityExists(city.Id))
@@ -117,8 +128,8 @@ namespace EmployeeManagement.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
-            }
-            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Id", city.CountryId);
+            
+            ViewData["CountryId"] = new SelectList(_context.Countries, "Id", "Name", city.CountryId);
             return View(city);
         }
 
