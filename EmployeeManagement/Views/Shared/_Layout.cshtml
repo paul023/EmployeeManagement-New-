@@ -32,6 +32,8 @@
     <link rel="stylesheet" href="~/AdminLTE/plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
     <link rel="stylesheet" href="~/AdminLTE/plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
 </head>
+
+
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
         
@@ -324,14 +326,19 @@
                 </nav>
 
         </aside>
-@*         @await Html.PartialAsync("_Alerts") *@
+
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
 
             <!-- Main content -->
+            <div>
+                <partial name="_Alerts" />
+            </div>
             <section class="content">
                 <div class="container-fluid">
+                
+
                     @RenderBody()
 
                 </div><!-- /.container-fluid -->
@@ -354,16 +361,38 @@
         <!-- /.control-sidebar -->
     </div>
     <!-- ./wrapper -->
-    <!-- jQuery -->
+    <!-- jQuery (must load first) -->
     <script src="~/AdminLTE/plugins/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap 4 -->
+    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- AdminLTE -->
+    <script src="~/AdminLTE/dist/js/adminlte.js"></script>
+
+    <!-- Auto-dismiss alerts -->
+    <script>
+        $(function () {
+          setTimeout(function () {
+            $(".alert").fadeTo(500, 0).slideUp(500, function () {
+              $(this).alert('close');
+            });
+          }, 4000);
+        });
+    </script>
+
+
+    <!-- AdminLTE -->
+    <script src="~/lib/admin-lte/js/adminlte.min.js"></script>
+  
+   
     <!-- jQuery UI 1.11.4 -->
     <script src="~/AdminLTE/plugins/jquery-ui/jquery-ui.min.js"></script>
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
         $.widget.bridge('uibutton', $.ui.button)
     </script>
-    <!-- Bootstrap 4 -->
-    <script src="~/AdminLTE/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+   
     <!-- ChartJS -->
     <script src="~/AdminLTE/plugins/chart.js/Chart.min.js"></script>
     <!-- Sparkline -->
@@ -382,8 +411,7 @@
     <script src="~/AdminLTE/plugins/summernote/summernote-bs4.min.js"></script>
     <!-- overlayScrollbars -->
     <script src="~/AdminLTE/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
-    <!-- AdminLTE App -->
-    <script src="~/AdminLTE/dist/js/adminlte.js"></script>
+ 
 
     <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
     <script src="~/AdminLTE/dist/js/pages/dashboard.js"></script>

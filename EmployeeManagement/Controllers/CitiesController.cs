@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EmployeeManagement.Data;
+using EmployeeManagement.Helpers;
+using EmployeeManagement.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using EmployeeManagement.Data;
-using EmployeeManagement.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EmployeeManagement.Controllers
 {
@@ -68,9 +69,9 @@ namespace EmployeeManagement.Controllers
                 _context.Add(city);
                 await _context.SaveChangesAsync();
 
-                // Set TempData message
-                TempData["SuccessMessage"] = "City created successfully!";
-                return RedirectToAction(nameof(Index));
+            // Set TempData message
+            AlertHelper.AddSuccessMessage(this, "City created successfully!");
+            return RedirectToAction(nameof(Index));
             
         }
 
@@ -113,7 +114,7 @@ namespace EmployeeManagement.Controllers
                     city.ModifiedOn = DateTime.Now;
                     _context.Update(city);
                     await _context.SaveChangesAsync();
-                TempData["WarningMessage"] = "City updated successfully!";
+                AlertHelper.AddWarningMessage(this, "City updated successfully!");
                 return RedirectToAction(nameof(Index));
             }
                 catch (DbUpdateConcurrencyException)
@@ -164,6 +165,7 @@ namespace EmployeeManagement.Controllers
             }
 
             await _context.SaveChangesAsync();
+            AlertHelper.AddErrorMessage(this, "City deleted successfully!");
             return RedirectToAction(nameof(Index));
         }
 

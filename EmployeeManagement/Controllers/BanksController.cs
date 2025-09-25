@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using EmployeeManagement.Helpers;
 using EmployeeManagement.Data;
 using EmployeeManagement.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace EmployeeManagement.Controllers
 {
@@ -24,24 +23,8 @@ namespace EmployeeManagement.Controllers
             return View(await _context.Banks.ToListAsync());
         }
 
-        // GET: Banks/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-                return NotFound();
-
-            var bank = await _context.Banks.FirstOrDefaultAsync(m => m.Id == id);
-            if (bank == null)
-                return NotFound();
-
-            return View(bank);
-        }
-
         // GET: Banks/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View();
 
         // POST: Banks/Create
         [HttpPost]
@@ -52,21 +35,32 @@ namespace EmployeeManagement.Controllers
             {
                 _context.Add(bank);
                 await _context.SaveChangesAsync();
-                TempData["SuccessMessage"] = "Bank created successfully!";
+                AlertHelper.AddSuccessMessage(this, "Bank created successfully!");
                 return RedirectToAction(nameof(Index));
             }
             return View(bank);
         }
+        // GET: Cities/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
 
+            if (id == null) return NotFound();
+
+            var bank = await _context.Banks
+               // .Include(b => b.Country)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (bank == null) return NotFound();
+
+            return View(bank);
+        }
         // GET: Banks/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var bank = await _context.Banks.FindAsync(id);
-            if (bank == null)
-                return NotFound();
+            if (bank == null) return NotFound();
 
             return View(bank);
         }
@@ -76,8 +70,7 @@ namespace EmployeeManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Bank bank)
         {
-            if (id != bank.Id)
-                return NotFound();
+            if (id != bank.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -85,15 +78,13 @@ namespace EmployeeManagement.Controllers
                 {
                     _context.Update(bank);
                     await _context.SaveChangesAsync();
-                    TempData["WarningMessages"] = "Bank updated successfully!";
+                    AlertHelper.AddWarningMessage(this, "Bank updated successfully!");
                     return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!BankExists(bank.Id))
-                        return NotFound();
-                    else
-                        throw;
+                    if (!BankExists(bank.Id)) return NotFound();
+                    else throw;
                 }
             }
             return View(bank);
@@ -102,12 +93,10 @@ namespace EmployeeManagement.Controllers
         // GET: Banks/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-                return NotFound();
+            if (id == null) return NotFound();
 
             var bank = await _context.Banks.FirstOrDefaultAsync(m => m.Id == id);
-            if (bank == null)
-                return NotFound();
+            if (bank == null) return NotFound();
 
             return View(bank);
         }
@@ -122,19 +111,16 @@ namespace EmployeeManagement.Controllers
             {
                 _context.Banks.Remove(bank);
                 await _context.SaveChangesAsync();
-                TempData["ErrorMessage"] = "Bank deleted successfully!";
+                AlertHelper.AddErrorMessage(this, "Bank deleted successfully!");
             }
             else
             {
-                TempData["ErrorMessage"] = "Bank not found.";
+                AlertHelper.AddErrorMessage(this, "Bank not found.");
             }
 
             return RedirectToAction(nameof(Index));
         }
 
-        private bool BankExists(int id)
-        {
-            return _context.Banks.Any(e => e.Id == id);
-        }
+        private bool BankExists(int id) => _context.Banks.Any(e => e.Id == id);
     }
 }
