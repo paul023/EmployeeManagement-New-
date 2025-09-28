@@ -1,4 +1,5 @@
 ﻿using EmployeeManagement.Data;
+using EmployeeManagement.Helpers;
 using EmployeeManagement.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -30,7 +31,7 @@ namespace EmployeeManagement.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var roles = _roleManager.Roles.ToList(); // comes from AspNetRoles
+            var roles = _roleManager.Roles.ToList(); 
             return View(roles);
         }
 
@@ -51,7 +52,8 @@ namespace EmployeeManagement.Controllers
 
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Index");
+                AlertHelper.AddSuccessMessage(this, "Role created successfully!");
+                return RedirectToAction("Index");
                 }
                 else
                 {
@@ -88,51 +90,67 @@ namespace EmployeeManagement.Controllers
                 var finalresult = await _roleManager.UpdateAsync(result);
                 if (finalresult.Succeeded)
                 {
+                    AlertHelper.AddWarningMessage(this, "Role created successfully!");
                     return RedirectToAction("Index");
                 }
                 else
                 {
+                   
                     return View(model);
                 }
             }
+            AlertHelper.AddErrorMessage(this, "Role already exist!");
             return View(model);
         }
+      
+
+        // POST: Roles/DeleteConfirmed/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
+            if (string.IsNullOrEmpty(id))
+            {
+                AlertHelper.AddErrorMessage(this, "Invalid role ID.");
+                return RedirectToAction(nameof(Index));
+            }
+
             var role = await _roleManager.FindByIdAsync(id);
             if (role == null)
             {
-                return NotFound();
+                AlertHelper.AddErrorMessage(this, "Role not found.");
+                return RedirectToAction(nameof(Index));
             }
 
-            // Get all users in this role
+            // Prevent deleting if users are assigned
             var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
-
-            foreach (var user in usersInRole)
+            if (usersInRole.Any())
             {
-                await _userManager.RemoveFromRoleAsync(user, role.Name);
+                AlertHelper.AddErrorMessage(this, "Cannot delete role because it is assigned to users.");
+                return RedirectToAction(nameof(Index));
             }
 
-            // Now delete the role
             var result = await _roleManager.DeleteAsync(role);
 
             if (result.Succeeded)
             {
-                return RedirectToAction(nameof(Index));
+                AlertHelper.AddErrorMessage(this, "Role deleted successfully!");
             }
-
-            foreach (var error in result.Errors)
+            else
             {
-                ModelState.AddModelError("", error.Description);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                AlertHelper.AddErrorMessage(this, "Error deleting role.");
             }
 
-            var roles = _roleManager.Roles.ToList();
-            return View("Index", roles);
+            return RedirectToAction(nameof(Index));
         }
 
-      
+
+
+
         public async Task<IActionResult> Details(string id)
         {
             if (id == null)

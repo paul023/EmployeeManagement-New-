@@ -90,16 +90,7 @@ namespace EmployeeManagement.Controllers
             return View(bank);
         }
 
-        // GET: Banks/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null) return NotFound();
 
-            var bank = await _context.Banks.FirstOrDefaultAsync(m => m.Id == id);
-            if (bank == null) return NotFound();
-
-            return View(bank);
-        }
 
         // POST: Banks/Delete/5
         [HttpPost, ActionName("Delete")]

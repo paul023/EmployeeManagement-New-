@@ -1,4 +1,5 @@
 ﻿using EmployeeManagement.Data;
+using EmployeeManagement.Helpers;
 using EmployeeManagement.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,17 +24,17 @@ namespace EmployeeManagement.Controllers
             _userManager = userManager;
             _context = context;
         }
-        public async Task <ActionResult> Index()
+        public async Task<ActionResult> Index()
         {
-            
-            var users = await _context.Users.Include(x=>x.Role).ToListAsync();
-           
+
+            var users = await _context.Users.Include(x => x.Role).ToListAsync();
+
             return View(users);
         }
         [HttpGet]
         public async Task<ActionResult> Create()
         {
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id","Name");
+            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name");
             return View();
         }
 
@@ -54,17 +55,41 @@ namespace EmployeeManagement.Controllers
             user.CreatedOn = DateTime.Now;
             user.CreateById = "Paul";
             user.RoleId = User.RoleId;
-            var result = await _userManager.CreateAsync(user,User.Password);
-            
-            if(result.Succeeded)
-             {
+
+
+            var result = await _userManager.CreateAsync(user, User.Password);
+
+            if (result.Succeeded)
+            {
+                var role = await _roleManager.FindByIdAsync(User.RoleId);
+                if (role != null)
+                    await _userManager.AddToRoleAsync(user, role.Name);
+
+                AlertHelper.AddWarningMessage(this, "User created successfully!");
                 return RedirectToAction("Index");
             }
             else
             {
+                // Add specific error messages to ModelState
+                foreach (var error in result.Errors)
+                {
+                    if (error.Code.Contains("Password"))
+                    {
+                        // Password-specific errors
+                        ModelState.AddModelError("Password", error.Description);
+                    }
+                    else
+                    {
+                        // Other errors (like username/email)
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+
+                ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", User.RoleId);
                 return View(User);
             }
-            ViewData["RoleId"] = new SelectList(_context.Roles, "Id", "Name", User.RoleId);
+
         }
     }
 }
+

@@ -42,6 +42,7 @@ namespace EmployeeManagement.Data
         public DbSet<Country> Countries { get; set; }
 
         public DbSet<LeaveApp> LeaveApps { get; set; }
+        public DbSet<EmployeeManagement.Models.User> User { get; set; } = default!;
 
 
     }

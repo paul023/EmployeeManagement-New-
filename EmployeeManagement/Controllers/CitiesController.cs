@@ -134,24 +134,7 @@ namespace EmployeeManagement.Controllers
             return View(city);
         }
 
-        // GET: Cities/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var city = await _context.Cities
-                .Include(c => c.Country)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (city == null)
-            {
-                return NotFound();
-            }
-
-            return View(city);
-        }
+     
 
         // POST: Cities/Delete/5
         [HttpPost, ActionName("Delete")]
