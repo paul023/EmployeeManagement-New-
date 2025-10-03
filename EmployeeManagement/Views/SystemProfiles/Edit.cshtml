@@ -1,0 +1,56 @@
+﻿@model EmployeeManagement.Models.SystemProfile
+
+@{
+    ViewData["Title"] = "Update System Profile";
+}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Update System Profile</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Edit">
+                        <input asp-for="Id" type="hidden" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Name" class="form-label"></label>
+                            <input asp-for="Name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ProfileId" class="form-label"></label>
+                            <select asp-for="ProfileId" class="form-control" asp-items="ViewBag.ProfileId"></select>
+                            <span asp-validation-for="ProfileId" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Order" class="form-label"></label>
+                            <input asp-for="Order" class="form-control" />
+                            <span asp-validation-for="Order" class="text-danger"></span>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="bg-light text-start mt-3 p-2 rounded">
+                            <a asp-action="Index" class="btn btn-sm btn-secondary me-2">
+                                <i class="bi bi-arrow-left"></i> Back
+                            </a>
+                            <button type="submit" class="btn btn-sm btn-success">
+                                <i class="bi bi-save"></i> Update Profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

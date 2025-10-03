@@ -4,8 +4,6 @@ using EmployeeManagement.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace EmployeeManagement.Controllers
 {
@@ -29,12 +27,11 @@ namespace EmployeeManagement.Controllers
             _context = context;
         }
 
-        public async Task<ActionResult> Index()
+        public IActionResult Index()
         {
-            var roles = _roleManager.Roles.ToList(); 
+            var roles = _roleManager.Roles.ToList();
             return View(roles);
         }
-
 
         [HttpGet]
         public IActionResult Create()
@@ -46,65 +43,94 @@ namespace EmployeeManagement.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create(Role model)
         {
-          
+            if (ModelState.IsValid)
+            {
+                var exists = await _roleManager.RoleExistsAsync(model.RoleName);
+                if (exists)
+                {
+                    AlertHelper.AddErrorMessage(this, "Role already exists.");
+                    return View(model);
+                }
+
                 var role = new IdentityRole { Name = model.RoleName };
                 var result = await _roleManager.CreateAsync(role);
 
                 if (result.Succeeded)
                 {
-                AlertHelper.AddSuccessMessage(this, "Role created successfully!");
-                return RedirectToAction("Index");
+                    AlertHelper.AddSuccessMessage(this, "Role created successfully!");
+                    return RedirectToAction(nameof(Index));
                 }
-                else
+
+                foreach (var error in result.Errors)
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    ModelState.AddModelError("", error.Description);
                 }
-            
+            }
+            AlertHelper.AddErrorMessage(this, "Role already exists!");
             return View(model);
         }
 
         [HttpGet]
         public async Task<ActionResult> Edit(string id)
         {
-            var role = new Role();
+            if (string.IsNullOrEmpty(id))
+            {
+                return NotFound();
+            }
+
             var result = await _roleManager.FindByIdAsync(id);
-            role.RoleName = result.Name;
-            role.Id = result.Id;
-      
+            if (result == null)
+            {
+                return NotFound();
+            }
+
+            var role = new Role
+            {
+                Id = result.Id,
+                RoleName = result.Name
+            };
+
             return View(role);
         }
 
         [HttpPost]
-
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(string id, Role model)
         {
-            var checkifexist = await _roleManager.RoleExistsAsync(model.RoleName);
-            if (!checkifexist)
-            {
-                var result = await _roleManager.FindByIdAsync(id);
-                result.Name = model.RoleName;
+            if (!ModelState.IsValid)
+                return View(model);
 
-                var finalresult = await _roleManager.UpdateAsync(result);
-                if (finalresult.Succeeded)
-                {
-                    AlertHelper.AddWarningMessage(this, "Role created successfully!");
-                    return RedirectToAction("Index");
-                }
-                else
-                {
-                   
-                    return View(model);
-                }
+            var role = await _roleManager.FindByIdAsync(id);
+            if (role == null)
+            {
+                AlertHelper.AddErrorMessage(this, "Role not found.");
+                return RedirectToAction(nameof(Index));
             }
-            AlertHelper.AddErrorMessage(this, "Role already exist!");
+
+            var checkIfExist = await _roleManager.RoleExistsAsync(model.RoleName);
+            if (checkIfExist && role.Name != model.RoleName)
+            {
+                AlertHelper.AddErrorMessage(this, "Role already exists!");
+                return View(model);
+            }
+
+            role.Name = model.RoleName;
+            var finalResult = await _roleManager.UpdateAsync(role);
+
+            if (finalResult.Succeeded)
+            {
+                AlertHelper.AddWarningMessage(this, "Role updated successfully!");
+                return RedirectToAction(nameof(Index));
+            }
+
+            foreach (var error in finalResult.Errors)
+            {
+                ModelState.AddModelError("", error.Description);
+            }
+
             return View(model);
         }
-      
 
-        // POST: Roles/DeleteConfirmed/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
@@ -122,7 +148,6 @@ namespace EmployeeManagement.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            // Prevent deleting if users are assigned
             var usersInRole = await _userManager.GetUsersInRoleAsync(role.Name);
             if (usersInRole.Any())
             {
@@ -134,7 +159,7 @@ namespace EmployeeManagement.Controllers
 
             if (result.Succeeded)
             {
-                AlertHelper.AddErrorMessage(this, "Role deleted successfully!");
+                AlertHelper.AddSuccessMessage(this, "Role deleted successfully!");
             }
             else
             {
@@ -148,12 +173,9 @@ namespace EmployeeManagement.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-
-
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null)
+            if (string.IsNullOrEmpty(id))
             {
                 return NotFound();
             }
@@ -164,7 +186,6 @@ namespace EmployeeManagement.Controllers
                 return NotFound();
             }
 
-            // Map to your Role model (if you're using a custom model for views)
             var model = new Role
             {
                 Id = role.Id,
@@ -173,9 +194,5 @@ namespace EmployeeManagement.Controllers
 
             return View(model);
         }
-
-
-
     }
 }
-
