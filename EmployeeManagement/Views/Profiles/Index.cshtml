@@ -1,0 +1,42 @@
+﻿@model EmployeeManagement.Models.ProfileViewModel
+
+@{
+    ViewData["Title"] = "Create Profile";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Assign User Roles</h3>
+    </div>
+
+    <div class="card-body">
+        <form asp-action="AssignRights" method="post">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="RoleId" class="form-label"></label>
+                    <select asp-for="RoleId" class="form-control" asp-items="ViewBag.Roles">
+                        <option value="">-- Select Role --</option>
+                    </select>
+                    <span asp-validation-for="RoleId" class="text-danger"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label asp-for="TaskId" class="form-label"></label>
+                    <select asp-for="TaskId" class="form-control" asp-items="ViewBag.Tasks">
+                        <option value="">-- Select Task --</option>
+                    </select>
+                    <span asp-validation-for="TaskId" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-plus"></i> Assing Rights
+                </button>
+                <a asp-action="Index" class="btn btn-secondary">
+                    <i class="fa fa-arrow-left"></i> Back
+                </a>
+            </div>
+        </form>
+    </div>
+</div>

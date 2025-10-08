@@ -46,7 +46,7 @@ namespace EmployeeManagement.Data
         public DbSet<EmployeeManagement.Models.User> User { get; set; } = default!;
         public DbSet<SystemProfile> SystemProfiles { get; set; }
         public DbSet<Audit> AuditLogs { get; set; }
-       
+        public DbSet<RoleProfile> RoleProfiles { get; set; }
         public virtual async Task<int> SaveChangesAsync(string userId = null)
         {
             OnBeforeSavingChanges(userId);

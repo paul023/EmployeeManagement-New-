@@ -41,34 +41,40 @@ namespace EmployeeManagement.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create(Role model)
+        public async Task<IActionResult> Create(Role model)
         {
-            if (ModelState.IsValid)
+
+            // Check if role exists
+            var roleName = model.RoleName.Trim();
+
+            // Check if role already exists (case-insensitive)
+            var exists = await _roleManager.RoleExistsAsync(roleName);
+            if (exists)
             {
-                var exists = await _roleManager.RoleExistsAsync(model.RoleName);
-                if (exists)
-                {
-                    AlertHelper.AddErrorMessage(this, "Role already exists.");
-                    return View(model);
-                }
-
-                var role = new IdentityRole { Name = model.RoleName };
-                var result = await _roleManager.CreateAsync(role);
-
-                if (result.Succeeded)
-                {
-                    AlertHelper.AddSuccessMessage(this, "Role created successfully!");
-                    return RedirectToAction(nameof(Index));
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
+                AlertHelper.AddErrorMessage(this, "Role already exists!");
+                return View(model);
             }
-            AlertHelper.AddErrorMessage(this, "Role already exists!");
+
+            // Create new role
+            var role = new IdentityRole(model.RoleName);
+            var result = await _roleManager.CreateAsync(role);
+
+            if (result.Succeeded)
+            {
+                TempData["SuccessMessage"] = "Role created successfully!";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // If creation fails, show the errors
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
+            }
+
+            TempData["ErrorMessage"] = "Failed to create role.";
             return View(model);
         }
+
 
         [HttpGet]
         public async Task<ActionResult> Edit(string id)
